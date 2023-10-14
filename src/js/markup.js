@@ -9,8 +9,10 @@ export default function createMarkup(arr) {
         views,
         comments,
         downloads,
-      }) => `<div class="photo-card">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+      }) => `
+      
+    
+<img src="${webformatURL}" alt="${tags}" loading="lazy" width="400px"/>
   <div class="info">
     <p class="info-item">
       <b${likes}>Likes</b>
@@ -25,7 +27,8 @@ export default function createMarkup(arr) {
       <b${downloads}>Downloads</b>
     </p>
   </div>
-</div>`
+</div></li>
+`
     )
     .join('');
 }

@@ -2,8 +2,19 @@
 import Notiflix from 'notiflix';
 import axios from 'axios';
 import createMarkup from './markup';
-import { getImage } from './api';
+import { getImage, PER_PAGE_MAX } from './api';
+
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 // const axios = require('axios');
+
+// // !SIMPLELI
+
+// const gallery = new SimpleLightbox('.gallery__item a', {
+//   captionsData: 'alt',
+//   captionPosition: 'bottom',
+//   captionDelay: 250,
+// });
 
 const refs = {
   searchForm: document.querySelector('.search-form'),
@@ -25,24 +36,33 @@ function handleSearch(evt) {
 
   searchQuery = evt.currentTarget.elements.searchQuery.value;
 
-  console.log(searchQuery);
-
   getImage(searchQuery, page)
     .then(data => {
-      window.alert(`Hooray! We found ${data.totalHits} images`);
       console.log(data);
-      // console.log(data.total);
-      // console.log(page);
+
+      if (data.totalHits == 0) {
+        hideLoadMoreBtn();
+        showNotFoundAlert();
+        return;
+      }
+
+      showSuccessAlert(data);
 
       const markup = createMarkup(data);
       refs.listGallery.insertAdjacentHTML('beforeend', markup);
+      // refresh
+      // gallery.refresh();
 
       if (page < data.totalHits) {
         refs.btnLoadMore.classList.replace('load-more-hidden', 'load-more');
       }
+
+      if (data.totalHits < PER_PAGE_MAX) {
+        hideLoadMoreBtn();
+      }
     })
     .catch(error => {
-      console.error(error);
+      console.log(error);
     });
 }
 
@@ -51,54 +71,48 @@ function handleSearch(evt) {
 refs.btnLoadMore.addEventListener('click', onLoadMore);
 function onLoadMore() {
   page += 1;
-  console.log('This is loadmore', page);
+  refs.btnLoadMore.disabled = true;
+
   getImage(searchQuery, page)
     .then(data => {
       console.log(data);
+      refs.btnLoadMore.disabled = false;
 
       const markup = createMarkup(data);
       refs.listGallery.insertAdjacentHTML('beforeend', markup);
 
+      // refresh
+      // gallery.refresh();
+
+      console.log(page);
       if (page >= data.totalHits) {
-        refs.btnLoadMore.classList.replace('load-more', 'load-more-hidden');
+        hideLoadMoreBtn();
+        showEndCollectionAlert();
       }
     })
     .catch(error => {
       console.error(error);
-    })
-    .finally(() =>
-      console.log("We're sorry, but you've reached the end of search results.")
-    );
+    });
 }
 
-// !!! з файла апі
+// ! function
 
-// async function getImage(searchQuery, page) {
-//   const BASE_URL = 'https://pixabay.com/api/';
-//   const API_KEY = '39941682-76fa8d5585fc0f3711900558e';
-//   // const axios = require('axios');
+function hideLoadMoreBtn() {
+  refs.btnLoadMore.classList.replace('load-more', 'load-more-hidden');
+}
 
-//   //   const params = new URLSearchParams({
-//   //     key: API_KEY,
-//   //     q: searchQuery,
-//   //     image_type: photo,
-//   //     orientation: horizontal,
-//   //     safesearch: true,
-//   // page,
-//   // per_page: 40,
-//   //   });
+function showNotFoundAlert() {
+  Notiflix.Notify.failure(
+    'Sorry, there are no images matching your search query. Please try again.'
+  );
+}
 
-//   try {
-//     const { data } = await axios.get(
-//       `${BASE_URL}?key=${API_KEY}&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=40`
-//     );
-//     console.log(data);
+function showSuccessAlert(data) {
+  Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images`);
+}
 
-//     // const { data } = await axios.get(`${BASE_URL}?${params}`);
-//     return data;
-//   } catch (error) {
-//     console.log(
-//       'Sorry, there are no images matching your search query. Please try again.'
-//     );
-//   }
-// }
+function showEndCollectionAlert() {
+  Notiflix.Notify.failure(
+    "We're sorry, but you've reached the end of search results."
+  );
+}

@@ -1,3 +1,9 @@
+img {
+  /* display: block; */
+  /* max-width: 100%; */
+  height: auto;
+}
+
 .load-more {
   display: inline-block;
   padding: 10px 20px;
@@ -24,4 +30,9 @@
 .load-more:disabled {
   background-color: #c1c1c1;
   cursor: not-allowed;
+}
+
+.info {
+  display: flex;
+  gap: 15px;
 }
