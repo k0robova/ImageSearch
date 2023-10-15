@@ -43,12 +43,13 @@ function handleSearch(evt) {
       if (data.totalHits == 0) {
         hideLoadMoreBtn();
         showNotFoundAlert();
+
         return;
       }
 
       showSuccessAlert(data);
 
-      console.log(data.hits[0].likes);
+      // console.log(data.hits[0].likes);
 
       const markup = createMarkup(data);
       refs.listGallery.insertAdjacentHTML('beforeend', markup);
@@ -71,6 +72,7 @@ function handleSearch(evt) {
 // !Load-More
 
 refs.btnLoadMore.addEventListener('click', onLoadMore);
+
 function onLoadMore() {
   page += 1;
   refs.btnLoadMore.disabled = true;
@@ -86,8 +88,11 @@ function onLoadMore() {
       // refresh
       // gallery.refresh();
 
-      console.log(page);
-      if (page >= data.totalHits) {
+      console.log('page', page);
+
+      console.log(page >= data.totalHits);
+
+      if (page >= data.totalHits / PER_PAGE_MAX) {
         hideLoadMoreBtn();
         showEndCollectionAlert();
       }
