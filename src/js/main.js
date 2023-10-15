@@ -48,6 +48,8 @@ function handleSearch(evt) {
 
       showSuccessAlert(data);
 
+      console.log(data.hits[0].likes);
+
       const markup = createMarkup(data);
       refs.listGallery.insertAdjacentHTML('beforeend', markup);
       // refresh
