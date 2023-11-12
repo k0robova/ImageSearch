@@ -1,20 +1,9 @@
-// import axios from 'axios';
 import Notiflix from 'notiflix';
 import axios from 'axios';
 import createMarkup from './markup';
 import { getImage, PER_PAGE_MAX } from './api';
-
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-// const axios = require('axios');
-
-// // !SIMPLELI
-
-// const gallery = new SimpleLightbox('.gallery__item a', {
-//   captionsData: 'alt',
-//   captionPosition: 'bottom',
-//   captionDelay: 250,
-// });
 
 const refs = {
   searchForm: document.querySelector('.search-form'),
@@ -43,18 +32,13 @@ function handleSearch(evt) {
       if (data.totalHits == 0) {
         hideLoadMoreBtn();
         showNotFoundAlert();
-
         return;
       }
 
       showSuccessAlert(data);
 
-      // console.log(data.hits[0].likes);
-
       const markup = createMarkup(data);
       refs.listGallery.insertAdjacentHTML('beforeend', markup);
-      // refresh
-      // gallery.refresh();
 
       if (page < data.totalHits) {
         refs.btnLoadMore.classList.replace('load-more-hidden', 'load-more');
@@ -84,13 +68,7 @@ function onLoadMore() {
 
       const markup = createMarkup(data);
       refs.listGallery.insertAdjacentHTML('beforeend', markup);
-
-      // refresh
-      // gallery.refresh();
-
       console.log('page', page);
-
-      console.log(page >= data.totalHits);
 
       if (page >= data.totalHits / PER_PAGE_MAX) {
         hideLoadMoreBtn();
@@ -102,7 +80,7 @@ function onLoadMore() {
     });
 }
 
-// ! function
+// ! functions
 
 function hideLoadMoreBtn() {
   refs.btnLoadMore.classList.replace('load-more', 'load-more-hidden');
