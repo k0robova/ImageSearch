@@ -13,7 +13,7 @@ export async function getImage(searchQuery, page) {
     return data;
   } catch (error) {
     console.log(
-      'Sorry, there are no images matching your search query. Please try again.'
+      'Sorry, there are no images matching your search query. Please try again!)'
     );
   }
 }
